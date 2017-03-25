@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" type="image/x-icon" href="https://production-assets.codepen.io/assets/favicon/favicon-8ea04875e70c4b0bb41da869e81236e54394d63638a1ef12fa558a4a835f1164.ico" />
+    <link rel="mask-icon" type="" href="https://production-assets.codepen.io/assets/favicon/logo-pin-f2d2b6d2c61838f7e76325261b7195c27224080bc099486ddd6dccb469b8e8e6.svg" color="#111" />
+    <title>Lender - Affordability Calculator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+
+    <link rel='stylesheet prefetch' href='https://fonts.googleapis.com/css?family=Montserrat:400,700|Source+Sans+Pro:300,400'>
+    <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+
+    <link rel="stylesheet" href="_assets/css/app.css">
+</head>
+<body translate="no">
+  <!-- 2,0,150000,25,No,150000 -->
+    <!-- <webview id="nationwide" src="http://www.nationwide-intermediary.co.uk/calculators/aff_calc"></webview> -->
+    <webview id="halifax" preload="./_assets/js/inyector.js" src="https://www.halifax-intermediaries.co.uk/tools_and_calculators/mortgage_affordability_calculator/default.aspx"></webview>
+    <div id="app" class="site-canvas">
+      <div class="header" v-bind:class="{ goBack: (lender.page !== 'dashboardView') }">
+        <div class="back-button" v-on:click="goBack()"></div>
+        Lender
+        <div class="settings" v-on:click="lender.page = 'settingsView'">
+          <i class="fa fa-cog"></i>
+        </div>
+        <a href="#" class="getResults" v-if="lender.page == 'clientView'" v-on:click="getResults()">
+          Get Client Results
+        </a>
+      </div>
+      <div class="dashboardView" v-if="lender.page == 'dashboardView'">
+        <h3>Clients</h3>
+        <ul class="clients overflow-height">
+          <li v-for="client in clients" v-bind:data-id="client.id" v-on:click="launchClient(client)">
+            {{client.name}}
+          </li>
+          <li v-if="!clients.length">No Clients Added</li>
+          <a href="#" class="addClient" v-on:click="addClient()">Add Client</a>
+        </ul>
+      </div>
+      <div class="clientView" v-if="lender.page == 'clientView'">
+        <h3>{{clientView.name}}</h3>
+        <div class="clientData overflow-height">
+          <table>
+            <tr>
+              <td>How many adults on application?</td>
+              <td><input name="adults" type="text" v-model="clientView.data.adults" /></td>
+            </tr>
+            <tr>
+              <td>How many children in the household?</td>
+              <td><input name="children" type="text" v-model="clientView.data.children"  /></td>
+            </tr>
+            <tr>
+              <td>How long is the mortgage term?</td>
+              <td><input name="term" type="text" v-model="clientView.data.term" /></td>
+            </tr>
+            <tr>
+              <td>Loan amount</td>
+              <td><input name="amount" type="text" v-model="clientView.data.amount" /></td>
+            </tr>
+            <tr>
+              <td>s the mortgage on any of the following schemes : Help to Buy Equity Share, Help to Buy Mortgage Guarantee, Shared Equity or Shared Ownership?</td>
+              <td>
+                <select name="ddlhelptobuy">
+                  <option value="No" selected>No</option>
+                  <option value="Yes">Yes</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td>Gross basic salary</td>
+              <td><input name="income1" type="text" v-model="clientView.data.income1" /></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="gettingResults" v-if="lender.page == 'gettingResults'">
+        <h3>Fetching Results ...</h3>
+        <ul>
+          <li data-results="halifax">
+            Halifax <span> <i class="fa fa-circle-o-notch fa-spin"></i> </span>
+          </li>
+          <li data-results="halifax">
+            Santander <span> <i class="fa fa-circle-o-notch fa-spin"></i> </span>
+          </li>
+          <li data-results="halifax">
+            HSBC <span> <i class="fa fa-circle-o-notch fa-spin"></i> </span>
+          </li>
+        </ul>
+      </div>
+      <div class="settingsView" v-if="lender.page == 'settingsView'">
+        <h3>Settings</h3>
+        <table class="overflow-height">
+          <tr>
+            <td>Natwest</td>
+            <td>
+              <section class="switch">
+                <input type="checkbox" id="Natwest" checked="checked" />
+                <label for="Natwest"></label>
+              </section>
+            </td>
+          </tr>
+          <tr>
+            <td>Halifax</td>
+            <td>
+              <section class="switch">
+                <input type="checkbox" id="Halifax" />
+                <label for="Halifax"></label>
+              </section>
+            </td>
+          </tr>
+          <tr>
+            <td>Barclays</td>
+            <td>
+              <section class="switch">
+                <input type="checkbox" id="Barclays"  />
+                <label for="Barclays"></label>
+              </section>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <script>window.$ = window.jQuery = require('./_assets/js/jquery.min.js');</script>
+    <script src="https://unpkg.com/vue"></script>
+    <script src="./_assets/js/app.js" charset="utf-8"></script>
+</body>
+</html>
