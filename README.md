@@ -1,6 +1,6 @@
 # Lender App
 
-**CGenarate mortgage affordability results with one click.*
+**Genarate mortgage affordability results with one click.*
 
 This is a minimdal Electron application that auto populates complex forms on a selection of mortgage affordability calculators
 
