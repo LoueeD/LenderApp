@@ -1,20 +1,19 @@
 {
-  "name": "electron-quick-start",
+  "name": "Lender",
   "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "description": "Mortgarge Affordability Calculator",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://github.com/LoueeD/LenderApp",
   "keywords": [
     "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "Mortgarge",
+    "Auto-Fill",
+    "Forms"
   ],
-  "author": "GitHub",
+  "author": "Louis Dickinson",
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^1.4.1"
