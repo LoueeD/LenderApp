@@ -12,9 +12,10 @@
     <link rel="stylesheet" href="_assets/css/app.css">
 </head>
 <body translate="no">
-  <!-- 2,0,150000,25,No,150000 -->
-    <!-- <webview id="nationwide" src="http://www.nationwide-intermediary.co.uk/calculators/aff_calc"></webview> -->
-    <webview id="halifax" preload="./_assets/js/inyector.js" src="https://www.halifax-intermediaries.co.uk/tools_and_calculators/mortgage_affordability_calculator/default.aspx"></webview>
+    <webview id="halifax" src="https://www.halifax-intermediaries.co.uk/tools_and_calculators/mortgage_affordability_calculator/default.aspx" preload="./_assets/js/injector.js"></webview>
+    <webview id="santander" preload="./_assets/js/inyector.js" src=""></webview>
+    <webview id="natwest" preload="./_assets/js/inyector.js" src=""></webview>
+    <webview id="barclays" preload="./_assets/js/inyector.js" src=""></webview>
     <div id="app" class="site-canvas">
       <div class="header" v-bind:class="{ goBack: (lender.page !== 'dashboardView') }">
         <div class="back-button" v-on:click="goBack()"></div>
@@ -33,7 +34,7 @@
             {{client.name}}
           </li>
           <li v-if="!clients.length">No Clients Added</li>
-          <a href="#" class="addClient" v-on:click="addClient()">Add Client</a>
+          <div class="addClient" v-on:click="addClient()"></div>
         </ul>
       </div>
       <div class="clientView" v-if="lender.page == 'clientView'">
@@ -42,24 +43,24 @@
           <table>
             <tr>
               <td>How many adults on application?</td>
-              <td><input name="adults" type="text" v-model="clientView.data.adults" /></td>
+              <td><input name="numberOfAdults" type="text" v-model="clientView.data.numberOfAdults" /></td>
             </tr>
             <tr>
               <td>How many children in the household?</td>
-              <td><input name="children" type="text" v-model="clientView.data.children"  /></td>
+              <td><input name="numberOfChildren" type="text" v-model="clientView.data.numberOfChildren"  /></td>
             </tr>
             <tr>
               <td>How long is the mortgage term?</td>
-              <td><input name="term" type="text" v-model="clientView.data.term" /></td>
+              <td><input name="termYears" type="text" v-model="clientView.data.termYears" /></td>
             </tr>
             <tr>
               <td>Loan amount</td>
-              <td><input name="amount" type="text" v-model="clientView.data.amount" /></td>
+              <td><input name="loanAmount" type="text" v-model="clientView.data.loanAmount" /></td>
             </tr>
             <tr>
               <td>s the mortgage on any of the following schemes : Help to Buy Equity Share, Help to Buy Mortgage Guarantee, Shared Equity or Shared Ownership?</td>
               <td>
-                <select name="ddlhelptobuy">
+                <select name="ddlhelptobuy" v-model="clientView.data.ddlhelptobuy">
                   <option value="No" selected>No</option>
                   <option value="Yes">Yes</option>
                 </select>
@@ -67,7 +68,7 @@
             </tr>
             <tr>
               <td>Gross basic salary</td>
-              <td><input name="income1" type="text" v-model="clientView.data.income1" /></td>
+              <td><input name="annualIncome1" type="text" v-model="clientView.data.annualIncome1" /></td>
             </tr>
           </table>
         </div>
@@ -75,44 +76,20 @@
       <div class="gettingResults" v-if="lender.page == 'gettingResults'">
         <h3>Fetching Results ...</h3>
         <ul>
-          <li data-results="halifax">
-            Halifax <span> <i class="fa fa-circle-o-notch fa-spin"></i> </span>
-          </li>
-          <li data-results="halifax">
-            Santander <span> <i class="fa fa-circle-o-notch fa-spin"></i> </span>
-          </li>
-          <li data-results="halifax">
-            HSBC <span> <i class="fa fa-circle-o-notch fa-spin"></i> </span>
+          <li v-for="(value, key) in settings" :data-results="key" v-if="value.state">
+            {{key}} <span> <i class="fa fa-circle-o-notch fa-spin"></i> </span>
           </li>
         </ul>
       </div>
       <div class="settingsView" v-if="lender.page == 'settingsView'">
         <h3>Settings</h3>
-        <table class="overflow-height">
-          <tr>
-            <td>Natwest</td>
+        <table>
+          <tr v-for="(value, key) in settings">
+            <td>{{key}}</td>
             <td>
               <section class="switch">
-                <input type="checkbox" id="Natwest" checked="checked" />
-                <label for="Natwest"></label>
-              </section>
-            </td>
-          </tr>
-          <tr>
-            <td>Halifax</td>
-            <td>
-              <section class="switch">
-                <input type="checkbox" id="Halifax" />
-                <label for="Halifax"></label>
-              </section>
-            </td>
-          </tr>
-          <tr>
-            <td>Barclays</td>
-            <td>
-              <section class="switch">
-                <input type="checkbox" id="Barclays"  />
-                <label for="Barclays"></label>
+                <input type="checkbox" :id="key" :value="value.state" v-model="settings[key].state" />
+                <label v-bind:for="key"></label>
               </section>
             </td>
           </tr>
@@ -121,7 +98,7 @@
     </div>
     <script src="_assets/js/arrive.min.js" charset="utf-8"></script>
     <script>window.$ = window.jQuery = require('./_assets/js/jquery.min.js');</script>
-    <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/vue" charset="utf-8"></script>
     <script src="./_assets/js/app.js" charset="utf-8"></script>
 </body>
 </html>

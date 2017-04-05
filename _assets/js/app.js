@@ -1,49 +1,88 @@
 (function() {
-  const webview = document.querySelector('#halifax')
-  var app = new Vue({
+  // Lender APP
+  const halifax = document.querySelector('#halifax')
+
+  window.app = new Vue({
     el: '#app',
     data: {
       lender: {
         page: 'dashboardView'
       },
+      settings: {
+        halifax: {
+          state: true,
+          url: 'https://www.halifax-intermediaries.co.uk/tools_and_calculators/mortgage_affordability_calculator/default.aspx'
+        },
+        santander: {
+          state: false,
+          url: 'https://google.co.uk'
+        },
+        natwest: {
+          state: false,
+          url: 'https://google.co.uk'
+        },
+        barclays: {
+          state: false,
+          url: 'https://google.co.uk'
+        }
+      },
+      sourceSites: [{
+        name: 'halifax',
+        form: [{
+          name: 'numberOfAdults',
+          selector: '#ctl00_ContentPlaceHolder_ctl00_adults',
+          type: 'input'
+        },{
+          name: 'numberOfChildren',
+          selector: '#ctl00_ContentPlaceHolder_ctl00_children',
+          type: 'input'
+        },{
+          name: 'loanAmount',
+          selector: '#ctl00_ContentPlaceHolder_ctl00_amount',
+          type: 'input'
+        },{
+          name: 'termYears',
+          selector: '#ctl00_ContentPlaceHolder_ctl00_term',
+          type: 'input'
+        },{
+          name: 'ddlhelptobuy',
+          selector: '#ctl00_ContentPlaceHolder_ctl00_ddlhelptobuy',
+          type: 'select'
+        },{
+          name: 'annualIncome1',
+          selector: '#ctl00_ContentPlaceHolder_ctl00_annualincome1',
+          type: 'input'
+        }],
+        submit: {
+          selector: '#ctl00_ContentPlaceHolder_ctl00_submitproduct'
+        },
+        result: {
+          selector: '#ctl00_ContentPlaceHolder_ctl00_loanamount'
+        }
+      },{
+        name: 'santander',
+        form: [{
+            name: 'numberOfAdults',
+            selector: '#ctl00_ContentPlaceHolder_ctl00_adults',
+            type: 'input'
+          }
+        ]
+      }],
       clientView: {
         id: null,
-        name: null
+        name: null,
+        data: null
       },
       clients: [{
           id: 1,
           name: 'Louis Dickinson',
-          data: { adults: 2, children: 0, amount: 150000, term: 25, ddlhelptobuy: 'No', income1: 150000
-          }
-        },{
-          id: 2,
-          name: 'David Cross',
-          data: { adults: null, children: null, amount: null, term: null, ddlhelptobuy: '', income1: ''
-          }
-        },{
-          id: 3,
-          name: 'Emma Watson',
-          data: { adults: null, children: null, amount: null, term: null, ddlhelptobuy: '', income1: ''
-          }
-        },{
-          id: 4,
-          name: 'Sherlock Homes',
-          data: { adults: null, children: null, amount: null, term: null, ddlhelptobuy: '', income1: ''
-          }
-        },{
-          id: 5,
-          name: 'Tony Stark',
-          data: { adults: null, children: null, amount: null, term: null, ddlhelptobuy: '', income1: ''
-          }
-        },{
-          id: 6,
-          name: 'Sherlock Homes',
-          data: { adults: null, children: null, amount: null, term: null, ddlhelptobuy: '', income1: ''
-          }
-        },{
-          id: 7,
-          name: 'Troye Sivan',
-          data: { adults: null, children: null, amount: null, term: null, ddlhelptobuy: '', income1: ''
+          data: {
+            numberOfAdults: 2,
+            numberOfChildren: 0,
+            loanAmount: 150000,
+            termYears: 25,
+            ddlhelptobuy: 'No',
+            annualIncome1: 150000
           }
         }
       ],
@@ -77,11 +116,14 @@
         });
       },
       getResults: function() {
-        // webview.openDevTools();
-        var self = this;
+        let self = this;
         this.lender.page = 'gettingResults';
-        webview.executeJavaScript(self.clientData(), function(){
-          webview.send("request");
+
+        halifax.addEventListener("dom-ready", function() {
+          halifax.openDevTools();
+          halifax.executeJavaScript(self.clientData(), function(){
+            halifax.send("request");
+          });
         });
       },
       saveLocalStorage: function() {
@@ -104,24 +146,8 @@
         }
       },
       clientData: function() {
-        var lenderFormData = {
-          adults: document.querySelector('input[name="adults"]').value,
-          children: document.querySelector('input[name="children"]').value,
-          amount: document.querySelector('input[name="amount"]').value,
-          term: document.querySelector('input[name="term"]').value,
-          ddlhelptobuy: document.querySelector('select[name="ddlhelptobuy"] option[selected]').value,
-          income1: document.querySelector('input[name="income1"]').value
-        };
-        return `window.lenderData = {
-          ctl00_ContentPlaceHolder_ctl00_adults: ` + lenderFormData.adults + `,
-          ctl00_ContentPlaceHolder_ctl00_children: ` + lenderFormData.children + `,
-          ctl00_ContentPlaceHolder_ctl00_amount: ` + lenderFormData.amount + `,
-          ctl00_ContentPlaceHolder_ctl00_term: ` + lenderFormData.term + `,
-          ctl00_ContentPlaceHolder_ctl00_ddlhelptobuy: '` + lenderFormData.ddlhelptobuy + `',
-          ctl00_ContentPlaceHolder_ctl00_annualincome1: ` + lenderFormData.income1 + `,
-          ctl00_ContentPlaceHolder_ctl00_submitproduct: "_SUBMIT",
-          ctl00_ContentPlaceHolder_ctl00_loanamount: "_RESULT"
-        };`;
+        return  "window.lenderData = JSON.parse('" + JSON.stringify(app.clientView) + "')" +
+                "window.lenderForm = JSON.parse('" + JSON.stringify(app.sourceSites) + "')";
       }
     }
   });
@@ -137,33 +163,38 @@
   //     document.querySelector('label[for=rbOtherPropertiesNo]').click();
   //     document.querySelector('#btnContinue').click();
   //     stage = 1;
-  //     setTimeout(santanderGetResult,800);
+  //     santanderGetResult();
   //   } else if(stage == 1) {
-  //     document.querySelector('#tbPermanentEmploymentBasicSalary1').value = 80000;
-  //     document.querySelector('#btnContinue').click();
-  //     stage = 2;
-  //     setTimeout(santanderGetResult,800);
+  //     document.arrive('#tbPermanentEmploymentBasicSalary1', function() {
+  //       document.querySelector('#tbPermanentEmploymentBasicSalary1').value = 80000;
+  //       document.querySelector('#btnContinue').click();
+  //       stage = 2;
+  //       santanderGetResult();
+  //     });
   //   } else if(stage == 2) {
-  //     document.querySelector('label[for=rbMonthlyExpenditureNo]').click();
-  //     document.querySelector('label[for=rbNonRegularMonthlyExpenditureNo]').click();
-  //     document.querySelector('#btnContinue').click();
-  //     stage = 3;
-  //     setTimeout(santanderGetResult,800);
+  //     document.arrive('label[for=rbMonthlyExpenditureNo]', function() {
+  //       document.querySelector('label[for=rbMonthlyExpenditureNo]').click();
+  //       document.querySelector('label[for=rbNonRegularMonthlyExpenditureNo]').click();
+  //       document.querySelector('#btnContinue').click();
+  //       stage = 3;
+  //       santanderGetResult();
+  //     });
   //   } else if(stage == 3) {
-  //      console.log(document.querySelector('.affordResultsWrap span').innerHTML);
+  //     document.arrive('.affordResultsWrap span', function() {
+  //       alert(document.querySelector('.affordResultsWrap span').innerHTML);
+  //    });
   //   }
   // }
   // santanderGetResult();
 
+  halifax.addEventListener("dom-ready", function() {
+    console.log('FIRE');
+  });
+
   // Process the data from the webview
-  webview.addEventListener('ipc-message',function(event){
+  halifax.addEventListener('ipc-message',function(event){
     var data = event.channel;
-    //alert();
     document.querySelector('li[data-results=halifax] span').innerHTML = data;
-    // console.log(event);
-    // var el = document.querySelector('.results');
-    // el.style.display = 'block';
-    // el.innerHTML = el.innerHTML + '<li>Halifax <span>' + event.channel + '</span></li>';
   });
 
   // You can also require other files to run in this process

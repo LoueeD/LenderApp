@@ -1,6 +1,7 @@
 // inyector.js
 // Get the ipcRenderer of electron
-const {ipcRenderer} = require('electron');
+const { ipcRenderer } = require('electron');
+// document.createElement('script').src = "https://cdn.rawgit.com/uzairfarooq/arrive/master/minified/arrive.min.js";
 
 //Lender object
 var lenderApp = {
@@ -8,28 +9,29 @@ var lenderApp = {
   el: null,
   resultWait: null,
   init: function(){
-    lenderApp.resultWait = document.getElementById(lenderApp.el).innerHTML;
+    lenderApp.resultWait = document.querySelector(lenderApp.el).innerHTML;
   },
   injectData: function (formEl, id, data){
-    var el = document.getElementById(id);
+    var el = document.querySelector(id);
     if(formEl === 'input' || formEl === 'select'){
       el.value = data;
+    }else if(formEl === 'click'){
+      el.click();
     }
   },
   getResult: function () {
-    var v = document.getElementById(lenderApp.el).innerHTML;
+    var v = document.querySelector(lenderApp.el).innerHTML;
     if(lenderApp.resultWait === v) {
       setTimeout(lenderApp.getResult, 500);
     }else{
-      ipcRenderer.sendToHost(document.getElementById(lenderApp.el).innerHTML);
+      ipcRenderer.sendToHost(document.querySelector(lenderApp.el).innerHTML);
       location.reload();
     }
   },
   run: function() {
-    console.log(window.lenderData);
-    for( var prop in window.lenderData) {
-      if(window.lenderData[prop] === '_SUBMIT'){
-        document.getElementById(prop).click();
+    for( var prop in window.lenderForm) {
+      if(window.lenderData.data[prop] === '_SUBMIT'){
+        document.querySelector(prop).click();
       }else if(window.lenderData[prop] === '_RESULT'){
         lenderApp.el = prop;
       }else{
@@ -41,8 +43,8 @@ var lenderApp = {
   }
 };
 
-for( var prop in window.lenderData) {
-  if(window.lenderData[prop] === '_RESULT'){
+for( var prop in window.lenderData.data) {
+  if(window.lenderData.data[prop] === '_RESULT'){
     lenderApp.el = prop;
   }
 }
