@@ -52,13 +52,15 @@
           name: 'annualIncome1',
           selector: '#ctl00_ContentPlaceHolder_ctl00_annualincome1',
           type: 'input'
-        }],
-        submit: {
-          selector: '#ctl00_ContentPlaceHolder_ctl00_submitproduct'
-        },
-        result: {
-          selector: '#ctl00_ContentPlaceHolder_ctl00_loanamount'
-        }
+        },{
+          name: 'submit',
+          selector: '#ctl00_ContentPlaceHolder_ctl00_submitproduct',
+          type: 'click'
+        },{
+          name: 'result',
+          selector: '#ctl00_ContentPlaceHolder_ctl00_loanamount',
+          type: 'get'
+        }]
       },{
         name: 'santander',
         form: [{
@@ -119,11 +121,9 @@
         let self = this;
         this.lender.page = 'gettingResults';
 
-        halifax.addEventListener("dom-ready", function() {
-          halifax.openDevTools();
-          halifax.executeJavaScript(self.clientData(), function(){
-            halifax.send("request");
-          });
+        // halifax.openDevTools();
+        halifax.executeJavaScript(self.clientData(), function(){
+          halifax.send("request");
         });
       },
       saveLocalStorage: function() {
@@ -146,8 +146,8 @@
         }
       },
       clientData: function() {
-        return  "window.lenderData = JSON.parse('" + JSON.stringify(app.clientView) + "')" +
-                "window.lenderForm = JSON.parse('" + JSON.stringify(app.sourceSites) + "')";
+        return  "window.lenderData = JSON.parse('" + JSON.stringify(app.clientView) + "');" +
+                "window.lenderForm = JSON.parse('" + JSON.stringify(app.sourceSites) + "');";
       }
     }
   });
