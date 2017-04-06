@@ -12,10 +12,10 @@
     <link rel="stylesheet" href="_assets/css/app.css">
 </head>
 <body translate="no">
-    <webview id="halifax" src="https://www.halifax-intermediaries.co.uk/tools_and_calculators/mortgage_affordability_calculator/default.aspx" preload="./_assets/js/injector.js"></webview>
-    <webview id="santander" preload="./_assets/js/inyector.js" src=""></webview>
-    <webview id="natwest" preload="./_assets/js/inyector.js" src=""></webview>
-    <webview id="barclays" preload="./_assets/js/inyector.js" src=""></webview>
+    <webview id="halifaxWebview" src="https://www.halifax-intermediaries.co.uk/tools_and_calculators/mortgage_affordability_calculator/default.aspx" preload="./_assets/js/injector.js"></webview>
+    <webview id="santanderWebview" preload="./_assets/js/inyector.js" src=""></webview>
+    <webview id="natwestWebview" preload="./_assets/js/inyector.js" src=""></webview>
+    <webview id="barclaysWebview" preload="./_assets/js/inyector.js" src=""></webview>
     <div id="app" class="site-canvas">
       <div class="header" v-bind:class="{ goBack: (lender.page !== 'dashboardView') }">
         <div class="back-button" v-on:click="goBack()"></div>

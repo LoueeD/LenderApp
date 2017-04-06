@@ -1,6 +1,6 @@
 (function() {
   // Lender APP
-  const halifax = document.querySelector('#halifax')
+  const halifaxWebview = document.querySelector('#halifaxWebview')
 
   window.app = new Vue({
     el: '#app',
@@ -121,9 +121,9 @@
         let self = this;
         this.lender.page = 'gettingResults';
 
-        // halifax.openDevTools();
-        halifax.executeJavaScript(self.clientData(), function(){
-          halifax.send("request");
+        // halifaxWebview.openDevTools();
+        halifaxWebview.executeJavaScript(self.clientData(), function(){
+          halifaxWebview.send("request");
         });
       },
       saveLocalStorage: function() {
@@ -187,12 +187,12 @@
   // }
   // santanderGetResult();
 
-  halifax.addEventListener("dom-ready", function() {
+  halifaxWebview.addEventListener("dom-ready", function() {
     console.log('FIRE');
   });
 
   // Process the data from the webview
-  halifax.addEventListener('ipc-message',function(event){
+  halifaxWebview.addEventListener('ipc-message',function(event){
     var data = event.channel;
     document.querySelector('li[data-results=halifax] span').innerHTML = data;
   });
